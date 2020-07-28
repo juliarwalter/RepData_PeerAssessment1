@@ -72,7 +72,7 @@ average <- ddply(data[!is.na(data$steps),], "interval", summarize, mean = mean(s
 ggplot(average, aes( x=interval, y=mean)) + geom_line() + xlab("Interval") + ylab("Average number of steps") + ggtitle("Average daily activity pattern")
 ```
 
-![](PA1_template_files/figure-html/time series%20-%20plot.2-1.png)<!-- -->
+![](PA1_template_files/figure-html/time%20series%20-%20plot.2-1.png)<!-- -->
 
 The 5-minute interval that, on average, contains the maximum number of steps
 
