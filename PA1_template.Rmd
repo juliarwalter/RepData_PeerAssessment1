@@ -8,14 +8,14 @@ output:
 ## Loading and preprocessing the data
 Read the data and unzip the file
 
-```{r loading}
+```{r loading, message=FALSE, cache=TRUE}
 # Read the data
 data <- read.csv(unz("activity.zip", "activity.csv"), quote="\"", sep=",")
 ```
 
 Required packages
 
-```{r packages}
+```{r packages, message=FALSE, cache=TRUE}
 library(ggplot2)
 library(plyr)
 library(dplyr)
