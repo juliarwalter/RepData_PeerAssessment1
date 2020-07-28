@@ -3,7 +3,6 @@ title: 'Reproducible Research: Peer Assessment 1'
 output:
   html_document:
     keep_md: yes
-  word_document: default
 ---
 
 ## Loading and preprocessing the data
@@ -40,7 +39,7 @@ Histogram of the total number of steps taken each day
 hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken each day", xlab = "Steps")
 ```
 
-![](PA1_template_files/figure-html/histogram - plot.1-1.png?raw=true)<!-- -->
+![](PA1_template_files/figure-html/histogram - plot.1-1.png)<!-- -->
 
 The mean and median number of steps
 
@@ -72,7 +71,7 @@ average <- ddply(data[!is.na(data$steps),], "interval", summarize, mean = mean(s
 ggplot(average, aes( x=interval, y=mean)) + geom_line() + xlab("Interval") + ylab("Average number of steps") + ggtitle("Average daily activity pattern")
 ```
 
-![](PA1_template_files/figure-html/time series - plot.2-1.png?raw=true)<!-- -->
+![](PA1_template_files/figure-html/time series - plot.2-1.png)<!-- -->
 
 The 5-minute interval that, on average, contains the maximum number of steps
 
@@ -137,7 +136,7 @@ hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of st
 hist(tapply(data_3$steps, data_3$as.date, sum), main = "Histogram total number of steps taken- Imputed", xlab = "Steps", ylim = c(0,50), col = "blue")
 ```
 
-![](PA1_template_files/figure-html/histogram - plot.3-1.png?raw=true)<!-- -->
+![](PA1_template_files/figure-html/histogram - plot.3-1.png)<!-- -->
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -157,10 +156,10 @@ average_4 <- ddply(average_4, "interval",  summarize, mean = mean(steps))
 ```r
 par(mfrow=c(1,1))
 # Plot 4
- plot(average_2$interval, average_2$mean, type = "l", ylab = "Average number of steps", xlab = "Interval", main = "Average daily activity pattern" , col = 2)
- points(average_4$interval, average_4$mean, type = "l", col = 20)
- legend("topright", c("Weekend", "Weekday"),lty=c(1,1), col= c(2,20))
+plot(average_2$interval, average_2$mean, type = "l", ylab = "Average number of steps", xlab = "Interval", main = "Average daily activity pattern" , col = 2)
+points(average_4$interval, average_4$mean, type = "l", col = 20)
+legend("topright", c("Weekend", "Weekday"),lty=c(1,1), col= c(2,20))
 ```
 
-![](PA1_template_files/figure-html/- plot 4-1.png?raw=true)<!-- -->
+![](PA1_template_files/figure-html/- plot 4-1.png)<!-- -->
 

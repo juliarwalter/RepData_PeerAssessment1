@@ -30,7 +30,7 @@ data$as.date<- as.POSIXct(data$date, format="%Y-%m-%d")
 ## What is mean total number of steps taken per day?
 Histogram of the total number of steps taken each day
 
-```{r histogram - plot.1, echo = TRUE }
+```{r histogram - plot.1, echo = TRUE, raw=true}
 # Plot 1
 hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken each day", xlab = "Steps")
 
@@ -47,7 +47,7 @@ median(steps_per_day$steps)
 ## What is the average daily activity pattern?
 Time series plot of the average number of steps taken
 
-```{r time series - plot.2, echo = TRUE }
+```{r time series - plot.2, echo = TRUE,raw=true}
 
 average <- ddply(data[!is.na(data$steps),], "interval", summarize, mean = mean(steps))
 # Plot 2
@@ -82,12 +82,13 @@ colnames(data_2)<- c("steps", "date", "interval", "as.date")
 data_3 <- rbind(data[!is.na(data$steps),], data_2)
 ```
 
-```{r histogram - plot.3, echo = TRUE }
+```{r histogram - plot.3, echo = TRUE, raw=true}
 # Calculate the total number of steps taken per day
 # Plot 3
 par(mfrow=c(2,1))
 hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken ", xlab = "Steps", ylim = c(0,50))
 hist(tapply(data_3$steps, data_3$as.date, sum), main = "Histogram total number of steps taken- Imputed", xlab = "Steps", ylim = c(0,50), col = "blue")
+
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -103,11 +104,11 @@ average_4 <-subset(data_3, data_3$datetype == "Weekday")
 average_4 <- ddply(average_4, "interval",  summarize, mean = mean(steps))
 ```
 
-```{r - plot 4, echo = TRUE }
+```{r - plot 4, echo = TRUE, raw=true}
 par(mfrow=c(1,1))
 # Plot 4
- plot(average_2$interval, average_2$mean, type = "l", ylab = "Average number of steps", xlab = "Interval", main = "Average daily activity pattern" , col = 2)
- points(average_4$interval, average_4$mean, type = "l", col = 20)
- legend("topright", c("Weekend", "Weekday"),lty=c(1,1), col= c(2,20))
+plot(average_2$interval, average_2$mean, type = "l", ylab = "Average number of steps", xlab = "Interval", main = "Average daily activity pattern" , col = 2)
+points(average_4$interval, average_4$mean, type = "l", col = 20)
+legend("topright", c("Weekend", "Weekday"),lty=c(1,1), col= c(2,20))
 ```
 
