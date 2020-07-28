@@ -3,6 +3,7 @@ title: 'Reproducible Research: Peer Assessment 1'
 output:
   html_document:
     keep_md: yes
+  word_document: default
 ---
 
 ## Loading and preprocessing the data
@@ -20,13 +21,6 @@ Required packages
 ```r
 library(ggplot2)
 library(plyr)
-```
-
-```
-## Warning: package 'plyr' was built under R version 4.0.2
-```
-
-```r
 library(dplyr)
 ```
 
@@ -73,8 +67,7 @@ Time series plot of the average number of steps taken
 
 
 ```r
-average <- ddply(data[!is.na(data$steps),], "interval", summarise, mean = mean(steps))
-
+average <- ddply(data[!is.na(data$steps),], "interval", summarize, mean = mean(steps))
 # Plot 2
 ggplot(average, aes( x=interval, y=mean)) + geom_line() + xlab("Interval") + ylab("Average number of steps") + ggtitle("Average daily activity pattern")
 ```

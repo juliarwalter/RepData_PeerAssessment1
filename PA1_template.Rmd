@@ -8,14 +8,14 @@ output:
 ## Loading and preprocessing the data
 Read the data and unzip the file
 
-```{r loading, message=FALSE, cache=TRUE}
+```{r loading, message=FALSE, echo = TRUE, warning=FALSE}
 # Read the data
 data <- read.csv(unz("activity.zip", "activity.csv"), quote="\"", sep=",")
 ```
 
 Required packages
 
-```{r packages, message=FALSE, cache=TRUE}
+```{r packages, message=FALSE, echo = TRUE, warning=FALSE }
 library(ggplot2)
 library(plyr)
 library(dplyr)
@@ -23,14 +23,14 @@ library(dplyr)
 
 Processing the data
 
-```{r as.date}
+```{r as.date, echo = TRUE }
 data$as.date<- as.POSIXct(data$date, format="%Y-%m-%d")
 ```
 
 ## What is mean total number of steps taken per day?
 Histogram of the total number of steps taken each day
 
-```{r histogram - plot.1}
+```{r histogram - plot.1, echo = TRUE }
 # Plot 1
 hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken each day", xlab = "Steps")
 
@@ -38,7 +38,7 @@ hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of st
 
 The mean and median number of steps
 
-```{r mean and madian}
+```{r mean and madian, echo = TRUE }
 steps_per_day <- aggregate(data$steps ~ data$date, FUN = sum)
 colnames(steps_per_day)<- c("date", "steps")
 mean(steps_per_day$steps)
@@ -47,9 +47,9 @@ median(steps_per_day$steps)
 ## What is the average daily activity pattern?
 Time series plot of the average number of steps taken
 
-```{r time series - plot.2}
-average <- ddply(data[!is.na(data$steps),], "interval", summarise, mean = mean(steps))
+```{r time series - plot.2, echo = TRUE }
 
+average <- ddply(data[!is.na(data$steps),], "interval", summarize, mean = mean(steps))
 # Plot 2
 ggplot(average, aes( x=interval, y=mean)) + geom_line() + xlab("Interval") + ylab("Average number of steps") + ggtitle("Average daily activity pattern")
 
@@ -57,7 +57,7 @@ ggplot(average, aes( x=interval, y=mean)) + geom_line() + xlab("Interval") + yla
 
 The 5-minute interval that, on average, contains the maximum number of steps
 
-```{r time series}
+```{r time series, echo = TRUE }
 maximum <- filter(na.omit(average), mean == max(mean))
  maximum[1]
 ```
@@ -65,13 +65,13 @@ maximum <- filter(na.omit(average), mean == max(mean))
 ## Imputing missing values
 Number of NA's value
 
-```{r NA}
+```{r NA, echo = TRUE }
 summary(data)
 ```
 
 Strategy for imputing missing data: the mean of the 5-minute interval
 
-```{r replace NA value}
+```{r replace NA value, echo = TRUE }
 # Calculate the mean of the 5-minute interval; replace NA value
 average_2 <- ddply(na.omit(data), .(interval), summarize, steps = mean(steps))
 na.data <- data[is.na(data$steps),]
@@ -82,7 +82,7 @@ colnames(data_2)<- c("steps", "date", "interval", "as.date")
 data_3 <- rbind(data[!is.na(data$steps),], data_2)
 ```
 
-```{r histogram - plot.3}
+```{r histogram - plot.3, echo = TRUE }
 # Calculate the total number of steps taken per day
 # Plot 3
 par(mfrow=c(2,1))
@@ -92,7 +92,7 @@ hist(tapply(data_3$steps, data_3$as.date, sum), main = "Histogram total number o
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r convert date in weekday}
+```{r convert date in weekday, echo = TRUE }
 data_3$weekdays <- weekdays(as.Date(data$as.date))
 data_3$datetype <- ifelse(data_3$weekdays %in% c("sábado", "domingo"), "Weekend", "Weekday")
  
@@ -103,7 +103,7 @@ average_4 <-subset(data_3, data_3$datetype == "Weekday")
 average_4 <- ddply(average_4, "interval",  summarize, mean = mean(steps))
 ```
 
-```{r - plot 4}
+```{r - plot 4, echo = TRUE }
 par(mfrow=c(1,1))
 # Plot 4
  plot(average_2$interval, average_2$mean, type = "l", ylab = "Average number of steps", xlab = "Interval", main = "Average daily activity pattern" , col = 2)
