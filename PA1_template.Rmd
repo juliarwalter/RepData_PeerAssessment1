@@ -1,7 +1,6 @@
 ---
 title: 'Reproducible Research: Peer Assessment 1'
 output:
-  pdf_document: default
   html_document:
     keep_md: yes
 ---
@@ -32,11 +31,9 @@ data$as.date<- as.POSIXct(data$date, format="%Y-%m-%d")
 Histogram of the total number of steps taken each day
 
 ```{r histogram - plot.1}
-# Create the PNG file
-png(filename = "plot1.png", width = 480, height = 480)
 # Plot 1
 hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken each day", xlab = "Steps")
-dev.off()
+
 ```
 
 The mean and median number of steps
@@ -52,11 +49,10 @@ Time series plot of the average number of steps taken
 
 ```{r time series - plot.2}
 average <- ddply(data[!is.na(data$steps),], "interval", summarise, mean = mean(steps))
-# Create the PNG file
-png(filename = "plot2.png", width = 480, height = 480)
+
 # Plot 2
 ggplot(average, aes( x=interval, y=mean)) + geom_line() + xlab("Interval") + ylab("Average number of steps") + ggtitle("Average daily activity pattern")
-dev.off()
+
 ```
 
 The 5-minute interval that, on average, contains the maximum number of steps
@@ -88,13 +84,10 @@ data_3 <- rbind(data[!is.na(data$steps),], data_2)
 
 ```{r histogram - plot.3}
 # Calculate the total number of steps taken per day
-# Create the PNG file
-png(filename = "plot3.png", width = 480, height = 480)
 # Plot 3
 par(mfrow=c(2,1))
-hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken each day", xlab = "Steps", ylim = c(0,50))
-hist(tapply(data_3$steps, data_3$as.date, sum), main = "Histogram total number of steps taken each day- Imputed Data", xlab = "Steps", ylim = c(0,50), col = "blue")
-dev.off()
+hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken ", xlab = "Steps", ylim = c(0,50))
+hist(tapply(data_3$steps, data_3$as.date, sum), main = "Histogram total number of steps taken- Imputed", xlab = "Steps", ylim = c(0,50), col = "blue")
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -111,13 +104,10 @@ average_4 <- ddply(average_4, "interval",  summarize, mean = mean(steps))
 ```
 
 ```{r - plot 4}
-# Create the PNG file
-png(filename = "plot4.png", width = 480, height = 480)
 par(mfrow=c(1,1))
 # Plot 4
  plot(average_2$interval, average_2$mean, type = "l", ylab = "Average number of steps", xlab = "Interval", main = "Average daily activity pattern" , col = 2)
  points(average_4$interval, average_4$mean, type = "l", col = 20)
  legend("topright", c("Weekend", "Weekday"),lty=c(1,1), col= c(2,20))
- dev.off()
 ```
 
