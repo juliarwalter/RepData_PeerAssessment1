@@ -3,6 +3,7 @@ title: 'Reproducible Research: Peer Assessment 1'
 output:
   html_document:
     keep_md: yes
+    
 ---
 
 ## Loading and preprocessing the data
@@ -15,7 +16,7 @@ data <- read.csv(unz("activity.zip", "activity.csv"), quote="\"", sep=",")
 
 Required packages
 
-```{r packages, message=FALSE, echo = TRUE, warning=FALSE }
+```{r packages, echo=TRUE, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(plyr)
 library(dplyr)
