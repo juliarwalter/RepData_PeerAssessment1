@@ -1,25 +1,123 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
+title: 'Reproducible Research: Peer Assessment 1'
+output:
+  pdf_document: default
   html_document:
-    keep_md: true
+    keep_md: yes
 ---
 
-
 ## Loading and preprocessing the data
+Read the data and unzip the file
 
+```{r loading}
+# Read the data
+data <- read.csv(unz("activity.zip", "activity.csv"), quote="\"", sep=",")
+```
 
+Required packages
+
+```{r packages}
+library(ggplot2)
+library(plyr)
+library(dplyr)
+```
+
+Processing the data
+
+```{r as.date}
+data$as.date<- as.POSIXct(data$date, format="%Y-%m-%d")
+```
 
 ## What is mean total number of steps taken per day?
+Histogram of the total number of steps taken each day
 
+```{r histogram - plot.1}
+# Create the PNG file
+png(filename = "plot1.png", width = 480, height = 480)
+# Plot 1
+hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken each day", xlab = "Steps")
+dev.off()
+```
 
+The mean and median number of steps
 
+```{r mean and madian}
+steps_per_day <- aggregate(data$steps ~ data$date, FUN = sum)
+colnames(steps_per_day)<- c("date", "steps")
+mean(steps_per_day$steps)
+median(steps_per_day$steps)
+```
 ## What is the average daily activity pattern?
+Time series plot of the average number of steps taken
 
+```{r time series - plot.2}
+average <- ddply(data[!is.na(data$steps),], "interval", summarise, mean = mean(steps))
+# Create the PNG file
+png(filename = "plot2.png", width = 480, height = 480)
+# Plot 2
+ggplot(average, aes( x=interval, y=mean)) + geom_line() + xlab("Interval") + ylab("Average number of steps") + ggtitle("Average daily activity pattern")
+dev.off()
+```
 
+The 5-minute interval that, on average, contains the maximum number of steps
+
+```{r time series}
+maximum <- filter(na.omit(average), mean == max(mean))
+ maximum[1]
+```
 
 ## Imputing missing values
+Number of NA's value
 
+```{r NA}
+summary(data)
+```
 
+Strategy for imputing missing data: the mean of the 5-minute interval
+
+```{r replace NA value}
+# Calculate the mean of the 5-minute interval; replace NA value
+average_2 <- ddply(na.omit(data), .(interval), summarize, steps = mean(steps))
+na.data <- data[is.na(data$steps),]
+data_2 <- merge(average_2, na.data, by=c("interval"))
+data_2 = data_2 %>%
+         select(steps.x, date, interval, as.date)
+colnames(data_2)<- c("steps", "date", "interval", "as.date")
+data_3 <- rbind(data[!is.na(data$steps),], data_2)
+```
+
+```{r histogram - plot.3}
+# Calculate the total number of steps taken per day
+# Create the PNG file
+png(filename = "plot3.png", width = 480, height = 480)
+# Plot 3
+par(mfrow=c(2,1))
+hist(tapply(data$steps, data$as.date, sum), main = "Histogram total number of steps taken each day", xlab = "Steps", ylim = c(0,50))
+hist(tapply(data_3$steps, data_3$as.date, sum), main = "Histogram total number of steps taken each day- Imputed Data", xlab = "Steps", ylim = c(0,50), col = "blue")
+dev.off()
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r convert date in weekday}
+data_3$weekdays <- weekdays(as.Date(data$as.date))
+data_3$datetype <- ifelse(data_3$weekdays %in% c("sábado", "domingo"), "Weekend", "Weekday")
+ 
+average_2 <-subset(data_3, data_3$datetype == "Weekend")
+average_2 <- ddply(average_2, "interval",  summarize, mean = mean(steps))
+ 
+average_4 <-subset(data_3, data_3$datetype == "Weekday")
+average_4 <- ddply(average_4, "interval",  summarize, mean = mean(steps))
+```
+
+```{r - plot 4}
+# Create the PNG file
+png(filename = "plot4.png", width = 480, height = 480)
+par(mfrow=c(1,1))
+# Plot 4
+ plot(average_2$interval, average_2$mean, type = "l", ylab = "Average number of steps", xlab = "Interval", main = "Average daily activity pattern" , col = 2)
+ points(average_4$interval, average_4$mean, type = "l", col = 20)
+ legend("topright", c("Weekend", "Weekday"),lty=c(1,1), col= c(2,20))
+ dev.off()
+```
+
